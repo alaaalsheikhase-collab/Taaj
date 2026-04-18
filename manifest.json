@@ -1,7 +1,9 @@
+
 {
   "name": "Taj Invoice System",
   "short_name": "Taj",
-  "start_url": "/Taaj/"
+  "start_url": "/Taaj/",
+  "scope": "/Taaj/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2e7d32",
