@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAJ Lieferschein</title>
+<title>TAAJ Lieferschein</title>
 
 <link rel="icon" href="icon.png">
 
@@ -22,7 +22,7 @@ input {width:100%; padding:10px; margin:5px 0;}
 <body>
 
 <img src="icon.png" class="logo">
-<h1>Lieferschein</h1>
+<h1>TAAJ Lieferschein</h1>
 
 <div class="card">
 <button onclick="show('order')">Neuer Lieferschein</button>
@@ -33,26 +33,26 @@ input {width:100%; padding:10px; margin:5px 0;}
 <div id="order" class="card">
 <h3>Neuer Lieferschein</h3>
 <div id="list"></div>
-<p>Total: €<span id="total">0</span></p>
+<p><b>Total: €<span id="total">0</span></b></p>
 </div>
 
 <div id="products" class="card" style="display:none">
 <h3>Produkte</h3>
-<input id="name" placeholder="Name">
-<input id="price" placeholder="€/kg">
-<input id="kg" placeholder="kg per bag (5 or 7)">
-<button onclick="add()">Add</button>
+<input id="name" placeholder="Produktname">
+<input id="price" placeholder="Preis €/kg">
+<input id="kg" placeholder="kg pro Sack (5 oder 7)">
+<button onclick="add()">Produkt hinzufügen</button>
 <div id="plist"></div>
 </div>
 
 <div id="fuel" class="card" style="display:none">
 <h3>Tageskosten</h3>
-<input id="km" placeholder="Kilometers">
-<input id="cons" placeholder="L/100km">
-<input id="fuelprice" placeholder="Fuel €/L">
-<input id="hours" placeholder="Hours worked">
-<input id="rate" placeholder="€/hour">
-<button onclick="calc()">Calculate</button>
+<input id="km" placeholder="Kilometer gefahren">
+<input id="cons" placeholder="Verbrauch L/100km">
+<input id="fuelprice" placeholder="Preis €/Liter">
+<input id="hours" placeholder="Arbeitsstunden">
+<input id="rate" placeholder="€/Stunde">
+<button onclick="calc()">Berechnen</button>
 <p id="result"></p>
 </div>
 
@@ -72,9 +72,9 @@ render();
 
 function add(){
 products.push({
-name: name.value,
-price: +price.value,
-kg: +kg.value
+name: document.getElementById("name").value,
+price: +document.getElementById("price").value,
+kg: +document.getElementById("kg").value
 });
 save();
 render();
@@ -103,8 +103,7 @@ ${p.name} (${p.kg}kg)
 </div>`;
 });
 
-totalEl = document.getElementById("total");
-totalEl.innerText = total.toFixed(2);
+document.getElementById("total").innerText = total.toFixed(2);
 
 let plist = document.getElementById("plist");
 plist.innerHTML="";
@@ -135,7 +134,7 @@ let net = total - fuelCost - labor;
 document.getElementById("result").innerText =
 "Fuel: €"+fuelCost.toFixed(2) +
 " | Labor: €"+labor.toFixed(2) +
-" | Net: €"+net.toFixed(2);
+" | Net Profit: €"+net.toFixed(2);
 }
 
 render();
