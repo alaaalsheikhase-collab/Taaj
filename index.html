@@ -1,144 +1,803 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAAJ Lieferschein</title>
-
-<link rel="icon" href="icon.png">
-
-<style>
-body {font-family:Arial; margin:0; padding:15px; background:#f5f5f5;}
-h1 {text-align:center;}
-.logo {display:block; margin:auto; width:120px;}
-.card {background:#fff; padding:15px; margin:10px 0; border-radius:12px;}
-button {padding:12px; margin:5px; border:none; background:#2e7d32; color:#fff; border-radius:10px; width:100%;}
-.product {display:flex; justify-content:space-between; margin:8px 0;}
-.qty {font-weight:bold;}
-input {width:100%; padding:10px; margin:5px 0;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAAJ</title>
+  <link rel="icon" href="icon.png" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+    .top {
+      background: linear-gradient(135deg, #0f5132, #198754);
+      color: white;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .logo {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 10px auto;
+      background: white;
+      border-radius: 18px;
+      padding: 8px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+    .home-buttons, .inline-buttons {
+      display: grid;
+      gap: 10px;
+    }
+    .home-buttons {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 14px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      margin-bottom: 14px;
+    }
+    h2, h3 {
+      margin-top: 0;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn-main {
+      background: #198754;
+      color: white;
+    }
+    .btn-main:hover {
+      background: #157347;
+    }
+    .btn-light {
+      background: #e9ecef;
+      color: #222;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-small {
+      padding: 7px 10px;
+      border-radius: 8px;
+      min-width: 38px;
+    }
+    input, select {
+      width: 100%;
+      padding: 11px 12px;
+      margin: 6px 0 10px 0;
+      border: 1px solid #ced4da;
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+    }
+    .hidden {
+      display: none;
+    }
+    .product-row, .simple-row {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .product-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .product-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .muted {
+      color: #6c757d;
+      font-size: 13px;
+    }
+    .qty-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .badge {
+      background: #eef7f0;
+      color: #0f5132;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    .summary-box {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    .right {
+      text-align: right;
+    }
+    .big {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    @media (max-width: 700px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="top">
+    <img src="icon.png" alt="TAAJ Logo" class="logo" />
+    <div class="title">TAAJ</div>
+    <div class="subtitle">Lieferschein • Products • Stock • Costs • Profit</div>
+  </div>
 
-<img src="icon.png" class="logo">
-<h1>TAAJ Lieferschein</h1>
+  <div class="container">
+    <div id="homePage">
+      <div class="home-buttons">
+        <button class="btn-main" onclick="openPage('orderPage')">Neuer Lieferschein</button>
+        <button class="btn-main" onclick="openPage('productsPage')">Produktliste bearbeiten</button>
+        <button class="btn-main" onclick="openPage('procurementPage')">Einkaufspreise</button>
+        <button class="btn-main" onclick="openPage('stockPage')">Bestand / Stock</button>
+        <button class="btn-main" onclick="openPage('costsPage')">Tageskosten</button>
+        <button class="btn-main" onclick="openPage('endDayPage'); renderEndDay();">Tag beenden</button>
+      </div>
 
-<div class="card">
-<button onclick="show('order')">Neuer Lieferschein</button>
-<button onclick="show('products')">Produkte bearbeiten</button>
-<button onclick="show('fuel')">Tageskosten</button>
-</div>
+      <div class="card">
+        <h2>Home</h2>
+        <div class="muted">Everything is saved on your device automatically.</div>
+      </div>
+    </div>
 
-<div id="order" class="card">
-<h3>Neuer Lieferschein</h3>
-<div id="list"></div>
-<p><b>Total: €<span id="total">0</span></b></p>
-</div>
+    <div id="orderPage" class="hidden">
+      <div class="card">
+        <div class="inline-buttons">
+          <button class="btn-light" onclick="goHome()">← Home</button>
+        </div>
+        <h2>Neuer Lieferschein</h2>
+        <div id="orderList"></div>
+        <div class="summary-box">
+          <div class="grid-3">
+            <div>
+              <div class="muted">Bags</div>
+              <div class="big" id="orderTotalBags">0</div>
+            </div>
+            <div>
+              <div class="muted">Kilograms</div>
+              <div class="big" id="orderTotalKg">0</div>
+            </div>
+            <div>
+              <div class="muted">Sales Today</div>
+              <div class="big">€ <span id="orderTotalSales">0.00</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn-main" onclick="saveTodaySales()">Save today's sales</button>
+          <button class="btn-light" onclick="resetOrder()">Reset current order</button>
+        </div>
+      </div>
+    </div>
 
-<div id="products" class="card" style="display:none">
-<h3>Produkte</h3>
-<input id="name" placeholder="Produktname">
-<input id="price" placeholder="Preis €/kg">
-<input id="kg" placeholder="kg pro Sack (5 oder 7)">
-<button onclick="add()">Produkt hinzufügen</button>
-<div id="plist"></div>
-</div>
+    <div id="productsPage" class="hidden">
+      <div class="card">
+        <button class="btn-light" onclick="goHome()">← Home</button>
+        <h2>Produktliste bearbeiten</h2>
 
-<div id="fuel" class="card" style="display:none">
-<h3>Tageskosten</h3>
-<input id="km" placeholder="Kilometer gefahren">
-<input id="cons" placeholder="Verbrauch L/100km">
-<input id="fuelprice" placeholder="Preis €/Liter">
-<input id="hours" placeholder="Arbeitsstunden">
-<input id="rate" placeholder="€/Stunde">
-<button onclick="calc()">Berechnen</button>
-<p id="result"></p>
-</div>
+        <div class="grid-2">
+          <div>
+            <label>English name</label>
+            <input id="newNameEn" placeholder="e.g. Sunflower Seeds" />
+          </div>
+          <div>
+            <label>Arabic name</label>
+            <input id="newNameAr" placeholder="e.g. بزر دوار الشمس" />
+          </div>
+        </div>
 
-<script>
-let products = JSON.parse(localStorage.getItem("products")||"[]");
-let order = {};
+        <div class="grid-3">
+          <div>
+            <label>Sales price €/kg</label>
+            <input id="newSalePrice" type="number" step="0.01" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Kg per bag</label>
+            <select id="newBagKg">
+              <option value="5">5</option>
+              <option value="7">7</option>
+            </select>
+          </div>
+          <div>
+            <label>Category</label>
+            <input id="newCategory" placeholder="e.g. Nuts / Mix / Seeds" />
+          </div>
+        </div>
 
-function save(){localStorage.setItem("products", JSON.stringify(products));}
+        <button class="btn-main" onclick="addProduct()">Add product</button>
 
-function show(id){
-document.getElementById("order").style.display="none";
-document.getElementById("products").style.display="none";
-document.getElementById("fuel").style.display="none";
-document.getElementById(id).style.display="block";
-render();
-}
+        <hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;" />
 
-function add(){
-products.push({
-name: document.getElementById("name").value,
-price: +document.getElementById("price").value,
-kg: +document.getElementById("kg").value
-});
-save();
-render();
-}
+        <h3>Existing products</h3>
+        <div id="productsEditorList"></div>
+      </div>
+    </div>
 
-function render(){
-let list = document.getElementById("list");
-list.innerHTML="";
-let total=0;
+    <div id="procurementPage" class="hidden">
+      <div class="card">
+        <button class="btn-light" onclick="goHome()">← Home</button>
+        <h2>Einkaufspreise</h2>
+        <div class="muted">Set cost price per kilogram for each product.</div>
+        <div id="procurementList"></div>
+        <button class="btn-main" onclick="saveAllProcurement()">Save procurement prices</button>
+      </div>
+    </div>
 
-products.forEach((p,i)=>{
-let bags = order[i]||0;
-let kg = bags * p.kg;
-let price = kg * p.price;
-total += price;
+    <div id="stockPage" class="hidden">
+      <div class="card">
+        <button class="btn-light" onclick="goHome()">← Home</button>
+        <h2>Bestand / Stock</h2>
+        <div class="muted">Set number of bags in stock.</div>
+        <div id="stockList"></div>
+        <button class="btn-main" onclick="saveAllStock()">Save stock</button>
+      </div>
+    </div>
 
-list.innerHTML += `
-<div class="product">
-${p.name} (${p.kg}kg)
-<div>
-<button onclick="change(${i},-1)">-</button>
-<span class="qty">${bags}</span>
-<button onclick="change(${i},1)">+</button>
-= €${price.toFixed(2)}
-</div>
-</div>`;
-});
+    <div id="costsPage" class="hidden">
+      <div class="card">
+        <button class="btn-light" onclick="goHome()">← Home</button>
+        <h2>Tageskosten</h2>
 
-document.getElementById("total").innerText = total.toFixed(2);
+        <div class="grid-2">
+          <div>
+            <label>Kilometers driven today</label>
+            <input id="kmDriven" type="number" step="0.1" placeholder="0" />
+          </div>
+          <div>
+            <label>Car consumption (L/100km)</label>
+            <input id="fuelConsumption" type="number" step="0.1" placeholder="0" />
+          </div>
+        </div>
 
-let plist = document.getElementById("plist");
-plist.innerHTML="";
-products.forEach(p=>{
-plist.innerHTML += `<div>${p.name} - €${p.price}/kg</div>`;
-});
-}
+        <div class="grid-2">
+          <div>
+            <label>Fuel price €/liter</label>
+            <input id="fuelPrice" type="number" step="0.01" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Work hours today</label>
+            <input id="workHours" type="number" step="0.1" placeholder="0" />
+          </div>
+        </div>
 
-function change(i,d){
-order[i] = (order[i]||0) + d;
-if(order[i]<0) order[i]=0;
-render();
-}
+        <div class="grid-2">
+          <div>
+            <label>Hourly rate €/hour</label>
+            <input id="hourlyRate" type="number" step="0.01" placeholder="10.00" />
+          </div>
+          <div style="display:flex;align-items:end;">
+            <button class="btn-main" style="width:100%;" onclick="saveDailyCosts()">Save daily costs</button>
+          </div>
+        </div>
 
-function calc(){
-let km = +document.getElementById("km").value;
-let cons = +document.getElementById("cons").value;
-let fuel = +document.getElementById("fuelprice").value;
-let hours = +document.getElementById("hours").value;
-let rate = +document.getElementById("rate").value;
+        <div class="summary-box">
+          <div class="grid-3">
+            <div>
+              <div class="muted">Fuel cost today</div>
+              <div class="big">€ <span id="fuelCostView">0.00</span></div>
+            </div>
+            <div>
+              <div class="muted">Labor cost today</div>
+              <div class="big">€ <span id="laborCostView">0.00</span></div>
+            </div>
+            <div>
+              <div class="muted">Total extra cost today</div>
+              <div class="big">€ <span id="extraCostView">0.00</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-let fuelCost = (km/100)*cons*fuel;
-let labor = hours*rate;
-let total = parseFloat(document.getElementById("total").innerText || 0);
+    <div id="endDayPage" class="hidden">
+      <div class="card">
+        <button class="btn-light" onclick="goHome()">← Home</button>
+        <h2>Tag beenden</h2>
 
-let net = total - fuelCost - labor;
+        <div class="summary-box">
+          <div class="grid-2">
+            <div class="simple-row">
+              <div class="muted">Sales today</div>
+              <div class="big">€ <span id="endSales">0.00</span></div>
+            </div>
+            <div class="simple-row">
+              <div class="muted">Cost of goods today</div>
+              <div class="big">€ <span id="endGoodsCost">0.00</span></div>
+            </div>
+            <div class="simple-row">
+              <div class="muted">Fuel cost today</div>
+              <div class="big">€ <span id="endFuelCost">0.00</span></div>
+            </div>
+            <div class="simple-row">
+              <div class="muted">Labor cost today</div>
+              <div class="big">€ <span id="endLaborCost">0.00</span></div>
+            </div>
+            <div class="simple-row">
+              <div class="muted">Gross profit today</div>
+              <div class="big">€ <span id="endGrossProfit">0.00</span></div>
+            </div>
+            <div class="simple-row">
+              <div class="muted">Net profit today</div>
+              <div class="big">€ <span id="endNetProfit">0.00</span></div>
+            </div>
+          </div>
+        </div>
 
-document.getElementById("result").innerText =
-"Fuel: €"+fuelCost.toFixed(2) +
-" | Labor: €"+labor.toFixed(2) +
-" | Net Profit: €"+net.toFixed(2);
-}
+        <div class="card" style="padding:12px; margin-top:12px;">
+          <h3>Today's sold products</h3>
+          <div id="endDayProducts"></div>
+        </div>
 
-render();
-</script>
+        <button class="btn-danger" onclick="clearTodayData()">Clear today's data</button>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    const DEFAULT_PRODUCTS = [
+      { id: uid(), nameEn: "Sunflower Seeds", nameAr: "بزر دوار الشمس", salePrice: 3.50, bagKg: 5, category: "Seeds", procurementPrice: 0, stockBags: 0 },
+      { id: uid(), nameEn: "Pumpkin Seeds", nameAr: "بزر يقطين", salePrice: 5.00, bagKg: 5, category: "Seeds", procurementPrice: 0, stockBags: 0 },
+      { id: uid(), nameEn: "Peanuts", nameAr: "فول سوداني", salePrice: 4.00, bagKg: 5, category: "Nuts", procurementPrice: 0, stockBags: 0 },
+      { id: uid(), nameEn: "Almonds", nameAr: "لوز", salePrice: 9.00, bagKg: 5, category: "Nuts", procurementPrice: 0, stockBags: 0 },
+      { id: uid(), nameEn: "Cashews", nameAr: "كاجو", salePrice: 10.00, bagKg: 5, category: "Nuts", procurementPrice: 0, stockBags: 0 },
+      { id: uid(), nameEn: "Mixed Nuts", nameAr: "مكسرات مشكلة", salePrice: 8.00, bagKg: 7, category: "Mix", procurementPrice: 0, stockBags: 0 }
+    ];
+
+    let products = load("taaj_products", DEFAULT_PRODUCTS);
+    let order = load("taaj_order", {});
+    let daily = load("taaj_daily", {
+      salesToday: 0,
+      goodsCostToday: 0,
+      fuelCostToday: 0,
+      laborCostToday: 0,
+      soldItems: []
+    });
+
+    function uid() {
+      return "id_" + Math.random().toString(36).slice(2, 11);
+    }
+
+    function load(key, fallback) {
+      try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function save(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function money(n) {
+      return Number(n || 0).toFixed(2);
+    }
+
+    function openPage(pageId) {
+      document.getElementById("homePage").classList.add("hidden");
+      document.querySelectorAll("#orderPage,#productsPage,#procurementPage,#stockPage,#costsPage,#endDayPage")
+        .forEach(el => el.classList.add("hidden"));
+      document.getElementById(pageId).classList.remove("hidden");
+      refreshAll();
+    }
+
+    function goHome() {
+      document.querySelectorAll("#orderPage,#productsPage,#procurementPage,#stockPage,#costsPage,#endDayPage")
+        .forEach(el => el.classList.add("hidden"));
+      document.getElementById("homePage").classList.remove("hidden");
+      refreshAll();
+    }
+
+    function refreshAll() {
+      renderOrder();
+      renderProductsEditor();
+      renderProcurement();
+      renderStock();
+      renderCosts();
+      renderEndDay();
+    }
+
+    function getOrderQty(id) {
+      return Number(order[id] || 0);
+    }
+
+    function changeQty(id, delta) {
+      order[id] = Math.max(0, getOrderQty(id) + delta);
+      save("taaj_order", order);
+      renderOrder();
+    }
+
+    function renderOrder() {
+      const wrap = document.getElementById("orderList");
+      wrap.innerHTML = "";
+
+      let totalSales = 0;
+      let totalKg = 0;
+      let totalBags = 0;
+
+      products.forEach(p => {
+        const bags = getOrderQty(p.id);
+        const kg = bags * Number(p.bagKg || 5);
+        const lineTotal = kg * Number(p.salePrice || 0);
+
+        totalSales += lineTotal;
+        totalKg += kg;
+        totalBags += bags;
+
+        const div = document.createElement("div");
+        div.className = "product-row";
+        div.innerHTML = `
+          <div class="product-head">
+            <div>
+              <div class="product-name">${escapeHtml(p.nameEn)} ${p.nameAr ? "• " + escapeHtml(p.nameAr) : ""}</div>
+              <div class="muted">${escapeHtml(p.category || "")} • €${money(p.salePrice)}/kg • ${p.bagKg} kg per bag</div>
+            </div>
+            <div class="right">
+              <div class="badge">${bags} bag(s)</div>
+            </div>
+          </div>
+
+          <div class="qty-area">
+            <button class="btn-light btn-small" onclick="changeQty('${p.id}', -1)">-</button>
+            <div class="badge">${bags} bag(s)</div>
+            <button class="btn-main btn-small" onclick="changeQty('${p.id}', 1)">+</button>
+            <div class="badge">${kg} kg</div>
+            <div class="badge">€ ${money(lineTotal)}</div>
+          </div>
+        `;
+        wrap.appendChild(div);
+      });
+
+      document.getElementById("orderTotalBags").textContent = totalBags;
+      document.getElementById("orderTotalKg").textContent = totalKg;
+      document.getElementById("orderTotalSales").textContent = money(totalSales);
+    }
+
+    function saveTodaySales() {
+      let sales = 0;
+      let goodsCost = 0;
+      const soldItems = [];
+
+      products.forEach(p => {
+        const bags = getOrderQty(p.id);
+        if (bags > 0) {
+          const kg = bags * Number(p.bagKg || 5);
+          const sale = kg * Number(p.salePrice || 0);
+          const cost = kg * Number(p.procurementPrice || 0);
+
+          sales += sale;
+          goodsCost += cost;
+
+          soldItems.push({
+            nameEn: p.nameEn,
+            nameAr: p.nameAr,
+            bags,
+            kg,
+            sale,
+            cost
+          });
+
+          p.stockBags = Math.max(0, Number(p.stockBags || 0) - bags);
+        }
+      });
+
+      daily.salesToday = sales;
+      daily.goodsCostToday = goodsCost;
+      daily.soldItems = soldItems;
+
+      save("taaj_products", products);
+      save("taaj_daily", daily);
+      alert("Today's sales saved.");
+      renderOrder();
+      renderStock();
+      renderEndDay();
+    }
+
+    function resetOrder() {
+      order = {};
+      save("taaj_order", order);
+      renderOrder();
+    }
+
+    function addProduct() {
+      const nameEn = document.getElementById("newNameEn").value.trim();
+      const nameAr = document.getElementById("newNameAr").value.trim();
+      const salePrice = Number(document.getElementById("newSalePrice").value || 0);
+      const bagKg = Number(document.getElementById("newBagKg").value || 5);
+      const category = document.getElementById("newCategory").value.trim();
+
+      if (!nameEn) {
+        alert("Please add English name.");
+        return;
+      }
+
+      products.push({
+        id: uid(),
+        nameEn,
+        nameAr,
+        salePrice,
+        bagKg,
+        category,
+        procurementPrice: 0,
+        stockBags: 0
+      });
+
+      save("taaj_products", products);
+
+      document.getElementById("newNameEn").value = "";
+      document.getElementById("newNameAr").value = "";
+      document.getElementById("newSalePrice").value = "";
+      document.getElementById("newBagKg").value = "5";
+      document.getElementById("newCategory").value = "";
+
+      refreshAll();
+    }
+
+    function renderProductsEditor() {
+      const wrap = document.getElementById("productsEditorList");
+      wrap.innerHTML = "";
+
+      products.forEach((p, index) => {
+        const row = document.createElement("div");
+        row.className = "product-row";
+        row.innerHTML = `
+          <div class="grid-2">
+            <div>
+              <label>English name</label>
+              <input value="${escapeAttr(p.nameEn)}" onchange="updateProduct(${index}, 'nameEn', this.value)" />
+            </div>
+            <div>
+              <label>Arabic name</label>
+              <input value="${escapeAttr(p.nameAr || "")}" onchange="updateProduct(${index}, 'nameAr', this.value)" />
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div>
+              <label>Sales price €/kg</label>
+              <input type="number" step="0.01" value="${p.salePrice}" onchange="updateProduct(${index}, 'salePrice', this.value)" />
+            </div>
+            <div>
+              <label>Kg per bag</label>
+              <select onchange="updateProduct(${index}, 'bagKg', this.value)">
+                <option value="5" ${Number(p.bagKg) === 5 ? "selected" : ""}>5</option>
+                <option value="7" ${Number(p.bagKg) === 7 ? "selected" : ""}>7</option>
+              </select>
+            </div>
+            <div>
+              <label>Category</label>
+              <input value="${escapeAttr(p.category || "")}" onchange="updateProduct(${index}, 'category', this.value)" />
+            </div>
+          </div>
+
+          <button class="btn-danger" onclick="deleteProduct(${index})">Delete</button>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function updateProduct(index, field, value) {
+      if (field === "salePrice" || field === "bagKg") {
+        products[index][field] = Number(value || 0);
+      } else {
+        products[index][field] = value;
+      }
+      save("taaj_products", products);
+      refreshAll();
+    }
+
+    function deleteProduct(index) {
+      if (!confirm("Delete this product?")) return;
+      const id = products[index].id;
+      delete order[id];
+      products.splice(index, 1);
+      save("taaj_products", products);
+      save("taaj_order", order);
+      refreshAll();
+    }
+
+    function renderProcurement() {
+      const wrap = document.getElementById("procurementList");
+      wrap.innerHTML = "";
+
+      products.forEach((p, i) => {
+        const row = document.createElement("div");
+        row.className = "simple-row";
+        row.innerHTML = `
+          <div class="product-name">${escapeHtml(p.nameEn)} ${p.nameAr ? "• " + escapeHtml(p.nameAr) : ""}</div>
+          <div class="muted">${p.bagKg} kg per bag</div>
+          <input type="number" step="0.01" id="proc_${i}" value="${p.procurementPrice || 0}" placeholder="Procurement price €/kg" />
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function saveAllProcurement() {
+      products.forEach((p, i) => {
+        p.procurementPrice = Number(document.getElementById("proc_" + i).value || 0);
+      });
+      save("taaj_products", products);
+      alert("Procurement prices saved.");
+      refreshAll();
+    }
+
+    function renderStock() {
+      const wrap = document.getElementById("stockList");
+      wrap.innerHTML = "";
+
+      products.forEach((p, i) => {
+        const row = document.createElement("div");
+        row.className = "simple-row";
+        row.innerHTML = `
+          <div class="product-name">${escapeHtml(p.nameEn)} ${p.nameAr ? "• " + escapeHtml(p.nameAr) : ""}</div>
+          <div class="muted">${p.bagKg} kg per bag</div>
+          <input type="number" step="1" id="stock_${i}" value="${p.stockBags || 0}" placeholder="Stock in bags" />
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function saveAllStock() {
+      products.forEach((p, i) => {
+        p.stockBags = Number(document.getElementById("stock_" + i).value || 0);
+      });
+      save("taaj_products", products);
+      alert("Stock saved.");
+      refreshAll();
+    }
+
+    function saveDailyCosts() {
+      const kmDriven = Number(document.getElementById("kmDriven").value || 0);
+      const fuelConsumption = Number(document.getElementById("fuelConsumption").value || 0);
+      const fuelPrice = Number(document.getElementById("fuelPrice").value || 0);
+      const workHours = Number(document.getElementById("workHours").value || 0);
+      const hourlyRate = Number(document.getElementById("hourlyRate").value || 0);
+
+      const fuelCost = (kmDriven / 100) * fuelConsumption * fuelPrice;
+      const laborCost = workHours * hourlyRate;
+
+      daily.fuelCostToday = fuelCost;
+      daily.laborCostToday = laborCost;
+      daily.costInputs = { kmDriven, fuelConsumption, fuelPrice, workHours, hourlyRate };
+
+      save("taaj_daily", daily);
+      alert("Daily costs saved.");
+      renderCosts();
+      renderEndDay();
+    }
+
+    function renderCosts() {
+      const inputs = daily.costInputs || {};
+      document.getElementById("kmDriven").value = inputs.kmDriven ?? "";
+      document.getElementById("fuelConsumption").value = inputs.fuelConsumption ?? "";
+      document.getElementById("fuelPrice").value = inputs.fuelPrice ?? "";
+      document.getElementById("workHours").value = inputs.workHours ?? "";
+      document.getElementById("hourlyRate").value = inputs.hourlyRate ?? 10;
+
+      document.getElementById("fuelCostView").textContent = money(daily.fuelCostToday || 0);
+      document.getElementById("laborCostView").textContent = money(daily.laborCostToday || 0);
+      document.getElementById("extraCostView").textContent = money((daily.fuelCostToday || 0) + (daily.laborCostToday || 0));
+    }
+
+    function renderEndDay() {
+      const sales = Number(daily.salesToday || 0);
+      const goods = Number(daily.goodsCostToday || 0);
+      const fuel = Number(daily.fuelCostToday || 0);
+      const labor = Number(daily.laborCostToday || 0);
+      const gross = sales - goods;
+      const net = sales - goods - fuel - labor;
+
+      document.getElementById("endSales").textContent = money(sales);
+      document.getElementById("endGoodsCost").textContent = money(goods);
+      document.getElementById("endFuelCost").textContent = money(fuel);
+      document.getElementById("endLaborCost").textContent = money(labor);
+      document.getElementById("endGrossProfit").textContent = money(gross);
+      document.getElementById("endNetProfit").textContent = money(net);
+
+      const wrap = document.getElementById("endDayProducts");
+      wrap.innerHTML = "";
+
+      if (!daily.soldItems || daily.soldItems.length === 0) {
+        wrap.innerHTML = `<div class="muted">No saved sales for today.</div>`;
+        return;
+      }
+
+      daily.soldItems.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "simple-row";
+        row.innerHTML = `
+          <div class="product-name">${escapeHtml(item.nameEn)} ${item.nameAr ? "• " + escapeHtml(item.nameAr) : ""}</div>
+          <div class="muted">${item.bags} bag(s) • ${item.kg} kg</div>
+          <div class="muted">Sales: €${money(item.sale)} • Cost: €${money(item.cost)}</div>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function clearTodayData() {
+      if (!confirm("Clear today's data?")) return;
+      daily = {
+        salesToday: 0,
+        goodsCostToday: 0,
+        fuelCostToday: 0,
+        laborCostToday: 0,
+        soldItems: []
+      };
+      order = {};
+      save("taaj_daily", daily);
+      save("taaj_order", order);
+      refreshAll();
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str);
+    }
+
+    save("taaj_products", products);
+    refreshAll();
+  </script>
 </body>
 </html>
