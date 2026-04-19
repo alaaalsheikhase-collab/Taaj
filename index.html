@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAJ Lieferschein</title>
+
+<link rel="icon" href="icon.png">
+
+<style>
+body {font-family:Arial; margin:0; padding:15px; background:#f5f5f5;}
+h1 {text-align:center;}
+.logo {display:block; margin:auto; width:120px;}
+.card {background:#fff; padding:15px; margin:10px 0; border-radius:12px;}
+button {padding:12px; margin:5px; border:none; background:#2e7d32; color:#fff; border-radius:10px; width:100%;}
+.product {display:flex; justify-content:space-between; margin:8px 0;}
+.qty {font-weight:bold;}
+input {width:100%; padding:10px; margin:5px 0;}
+</style>
+</head>
+
+<body>
+
+<img src="icon.png" class="logo">
+<h1>Lieferschein</h1>
+
+<div class="card">
+<button onclick="show('order')">Neuer Lieferschein</button>
+<button onclick="show('products')">Produkte bearbeiten</button>
+<button onclick="show('fuel')">Tageskosten</button>
+</div>
+
+<div id="order" class="card">
+<h3>Neuer Lieferschein</h3>
+<div id="list"></div>
+<p>Total: €<span id="total">0</span></p>
+</div>
+
+<div id="products" class="card" style="display:none">
+<h3>Produkte</h3>
+<input id="name" placeholder="Name">
+<input id="price" placeholder="€/kg">
+<input id="kg" placeholder="kg per bag (5 or 7)">
+<button onclick="add()">Add</button>
+<div id="plist"></div>
+</div>
+
+<div id="fuel" class="card" style="display:none">
+<h3>Tageskosten</h3>
+<input id="km" placeholder="Kilometers">
+<input id="cons" placeholder="L/100km">
+<input id="fuelprice" placeholder="Fuel €/L">
+<input id="hours" placeholder="Hours worked">
+<input id="rate" placeholder="€/hour">
+<button onclick="calc()">Calculate</button>
+<p id="result"></p>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem("products")||"[]");
+let order = {};
+
+function save(){localStorage.setItem("products", JSON.stringify(products));}
+
+function show(id){
+document.getElementById("order").style.display="none";
+document.getElementById("products").style.display="none";
+document.getElementById("fuel").style.display="none";
+document.getElementById(id).style.display="block";
+render();
+}
+
+function add(){
+products.push({
+name: name.value,
+price: +price.value,
+kg: +kg.value
+});
+save();
+render();
+}
+
+function render(){
+let list = document.getElementById("list");
+list.innerHTML="";
+let total=0;
+
+products.forEach((p,i)=>{
+let bags = order[i]||0;
+let kg = bags * p.kg;
+let price = kg * p.price;
+total += price;
+
+list.innerHTML += `
+<div class="product">
+${p.name} (${p.kg}kg)
+<div>
+<button onclick="change(${i},-1)">-</button>
+<span class="qty">${bags}</span>
+<button onclick="change(${i},1)">+</button>
+= €${price.toFixed(2)}
+</div>
+</div>`;
+});
+
+totalEl = document.getElementById("total");
+totalEl.innerText = total.toFixed(2);
+
+let plist = document.getElementById("plist");
+plist.innerHTML="";
+products.forEach(p=>{
+plist.innerHTML += `<div>${p.name} - €${p.price}/kg</div>`;
+});
+}
+
+function change(i,d){
+order[i] = (order[i]||0) + d;
+if(order[i]<0) order[i]=0;
+render();
+}
+
+function calc(){
+let km = +document.getElementById("km").value;
+let cons = +document.getElementById("cons").value;
+let fuel = +document.getElementById("fuelprice").value;
+let hours = +document.getElementById("hours").value;
+let rate = +document.getElementById("rate").value;
+
+let fuelCost = (km/100)*cons*fuel;
+let labor = hours*rate;
+let total = parseFloat(document.getElementById("total").innerText || 0);
+
+let net = total - fuelCost - labor;
+
+document.getElementById("result").innerText =
+"Fuel: €"+fuelCost.toFixed(2) +
+" | Labor: €"+labor.toFixed(2) +
+" | Net: €"+net.toFixed(2);
+}
+
+render();
+</script>
+
+</body>
+</html>
